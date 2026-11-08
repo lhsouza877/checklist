@@ -814,7 +814,7 @@ foreach ($check in (Read-JsonArray -Path $script:ChecksPath)) {
 }
 Initialize-Admin
 
-$prefix = if ($env:CHECKLIST_URL_PREFIX) { $env:CHECKLIST_URL_PREFIX } else { 'http://+:8080/' }
+$prefix = 'http://localhost:8080/'
 if (-not $prefix.EndsWith('/')) {
     $prefix += '/'
 }

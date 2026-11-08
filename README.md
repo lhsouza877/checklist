@@ -9,13 +9,12 @@ Aplicação web local para registrar a inspeção diária da empilhadeira antes 
 
 ## Primeira configuração
 
-1. Abra `configurar-rede.bat` e confirme a solicitação de administrador do Windows. Ele reserva a porta TCP 8080 e permite conexões apenas da sub-rede local em perfis de rede Privada e Domínio.
+1. Abra `configurar-rede.bat` e confirme a solicitação de administrador do Windows. Ele reserva `localhost:8080` para o servidor e remove a regra de firewall de rede do checklist.
 2. Execute `start.bat`. Na primeira execução, crie o nome de usuário e a senha do administrador (mínimo de 8 caracteres).
-3. No computador servidor, abra `http://localhost:8080`, entre como administrador e cadastre os cinco operadores. Use uma senha temporária exclusiva para cada pessoa e entregue-a em particular.
+3. Abra `http://localhost:8080`, entre como administrador e cadastre os cinco operadores. Use uma senha temporária exclusiva para cada pessoa e entregue-a em particular.
 4. No primeiro acesso, cada operador troca a senha temporária por uma senha pessoal.
-5. Para os outros computadores e celulares conectados à mesma rede, descubra o endereço IPv4 do servidor com `ipconfig` e abra `http://ENDERECO-IP:8080` (por exemplo, `http://192.168.1.20:8080`).
 
-Mantenha a janela do PowerShell aberta enquanto o sistema estiver em uso. Para encerrar, pressione `Ctrl+C` nela. Os dados ficam em `data\users.json` e `data\checks.json`, no computador servidor. Faça cópias de segurança regulares dessa pasta. A data e a hora são registradas pelo relógio do servidor; mantenha-o correto.
+O checklist fica acessível somente no computador em que o servidor está rodando; outros computadores e celulares da rede não podem acessá-lo. Mantenha a janela do PowerShell aberta enquanto o sistema estiver em uso. Para encerrar, pressione `Ctrl+C` nela. Os dados ficam em `data\users.json` e `data\checks.json`. Faça cópias de segurança regulares dessa pasta. A data e a hora são registradas pelo relógio do servidor; mantenha-o correto.
 
 ## Perfis e registros
 
@@ -26,15 +25,17 @@ Mantenha a janela do PowerShell aberta enquanto o sistema estiver em uso. Para e
 - Outros administradores podem cadastrar e gerenciar operadores, mas não podem criar administradores nem alterar o perfil de usuários.
 - O horário é capturado pelo servidor no momento em que o registro é recebido. Os registros são armazenados localmente e não são editáveis pela interface.
 - Senhas são armazenadas como hashes PBKDF2-SHA256 com salt individual. As sessões expiram após oito horas e o acesso é limitado à rede local configurada.
+- Senhas são armazenadas como hashes PBKDF2-SHA256 com salt individual. As sessões expiram após oito horas e o acesso é limitado ao próprio computador (`localhost`).
 
-## Proteção da rede
+## Acesso local
 
-O acesso padrão usa HTTP na rede local. Use somente em uma rede interna confiável; não encaminhe a porta 8080 para a internet nem use uma rede Wi-Fi pública. Para uso em redes compartilhadas ou fora da rede interna, publique a aplicação atrás de um servidor HTTPS corporativo e configure um certificado confiável.
+O servidor escuta apenas em `localhost:8080`; não habilite encaminhamento de porta nem exponha esse serviço à rede ou à internet. O script de configuração remove a regra de firewall de rede criada anteriormente, se existir.
 
 ## Dados e resolução de problemas
 
 - A porta padrão é `8080`. Para outra porta, altere `server.ps1` e `configurar-rede.ps1` antes de configurar a rede.
+- A porta padrão é `8080`. Para outra porta, altere `server.ps1` e `configurar-rede.ps1` antes de executar a configuração local.
 - Se outro programa já estiver usando a porta, encerre-o ou escolha outra porta e repita a configuração.
 - Os arquivos de dados são criados automaticamente em `data`. Para manter os dados em outra pasta, defina `CHECKLIST_DATA_DIR` antes de iniciar `server.ps1`.
-- Se a configuração de rede falhar, verifique se o computador está em uma rede marcada como Privada ou Domínio e execute novamente `configurar-rede.bat` como administrador.
+- Se a configuração local falhar, execute novamente `configurar-rede.bat` e confirme a solicitação de administrador do Windows.
 - O administrador inicial é criado uma vez. Guarde os dados da pasta `data` com segurança; apagar `users.json` fará o programa solicitar a criação de um novo administrador na inicialização.

@@ -1,26 +1,28 @@
 $ErrorActionPreference = 'Stop'
 $port = 8080
-$url = "http://+:$port/"
+$localUrl = "http://localhost:$port/"
+$networkUrl = "http://+:$port/"
 $account = "$env:USERDOMAIN\$env:USERNAME"
 
-Write-Host "Configurando acesso pela rede local na porta $port..."
-& netsh http add urlacl "url=$url" "user=$account"
-if ($LASTEXITCODE -ne 0) {
-    throw 'Não foi possível reservar o endereço HTTP. Execute este arquivo como administrador.'
+Write-Host "Removendo acesso pela rede e configurando acesso somente local na porta $port..."
+$networkReservation = & netsh http show urlacl "url=$networkUrl" 2>&1
+if ($LASTEXITCODE -eq 0 -and (($networkReservation -join "`n") -match [regex]::Escape($networkUrl))) {
+    & netsh http delete urlacl "url=$networkUrl"
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Não foi possível remover a reserva HTTP de rede.'
+    }
+}
+
+$localReservation = & netsh http show urlacl "url=$localUrl" 2>&1
+if ($LASTEXITCODE -ne 0 -or (($localReservation -join "`n") -notmatch [regex]::Escape($localUrl))) {
+    & netsh http add urlacl "url=$localUrl" "user=$account"
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Não foi possível reservar o endereço HTTP local. Execute este arquivo como administrador.'
+    }
 }
 
 $ruleName = 'Checklist Empilhadeira TCP 8080'
-$existingRule = Get-NetFirewallRule -DisplayName $ruleName -ErrorAction SilentlyContinue
-if (-not $existingRule) {
-    New-NetFirewallRule `
-        -DisplayName $ruleName `
-        -Direction Inbound `
-        -Action Allow `
-        -Protocol TCP `
-        -LocalPort $port `
-        -RemoteAddress LocalSubnet `
-        -Profile Private,Domain | Out-Null
-}
+Get-NetFirewallRule -DisplayName $ruleName -ErrorAction SilentlyContinue | Remove-NetFirewallRule
 
-Write-Host 'Acesso local configurado. Execute start.bat para iniciar o servidor.' -ForegroundColor Green
+Write-Host 'Acesso somente local configurado. Execute start.bat para iniciar o servidor.' -ForegroundColor Green
 Read-Host 'Pressione Enter para fechar'
