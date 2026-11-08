@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Checklist de Empilhadeira</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="topbar">
+    <a class="brand" href="/" aria-label="Mizu Cimentos - checklist de empilhadeira">
+      <img class="brand-logo" src="/logo-mizu.png" alt="Mizu Cimentos">
+      <span class="brand-copy">Checklist <strong>de empilhadeira</strong></span>
+    </a>
+    <span class="topbar-label">INSPEÇÃO PRÉ-USO</span>
+  </div>
+
+  <main class="page-shell">
+    <section id="login-view" class="auth-card" hidden>
+      <p class="eyebrow">EMPILHADEIRA · NR-12</p>
+      <h1>Acesse sua conta</h1>
+      <p class="muted">Entre com o usuário fornecido pelo administrador.</p>
+      <div id="login-alert" class="notice error" role="alert" hidden></div>
+      <form id="login-form" class="stack">
+        <label for="login-username">Usuário</label>
+        <input id="login-username" name="username" autocomplete="username" required maxlength="30">
+        <label for="login-password">Senha</label>
+        <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+        <button class="button primary full" type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <section id="password-view" class="auth-card" hidden>
+      <p class="eyebrow">SEGURANÇA DA CONTA</p>
+      <h1>Crie sua senha pessoal</h1>
+      <p class="muted">Por segurança, troque a senha temporária antes de continuar. Use pelo menos 8 caracteres.</p>
+      <div id="password-alert" class="notice error" role="alert" hidden></div>
+      <form id="password-form" class="stack">
+        <label for="current-password">Senha atual</label>
+        <input id="current-password" name="currentPassword" type="password" autocomplete="current-password" required>
+        <label for="new-password">Nova senha</label>
+        <input id="new-password" name="newPassword" type="password" autocomplete="new-password" minlength="8" required>
+        <label for="confirm-password">Confirme a nova senha</label>
+        <input id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required>
+        <button class="button primary full" type="submit">Salvar senha</button>
+      </form>
+    </section>
+
+    <section id="app-view" hidden>
+      <header class="welcome-row">
+        <div>
+          <p class="eyebrow">CHECKLIST DIÁRIO · ANTES DE CADA USO</p>
+          <h1 id="welcome-title">Olá</h1>
+          <p id="welcome-caption" class="muted"></p>
+        </div>
+        <button id="logout-button" class="button outline" type="button">Sair</button>
+      </header>
+
+      <nav id="main-nav" class="tabs" aria-label="Navegação principal">
+        <button class="tab active" type="button" data-view="checklist-panel">Novo checklist</button>
+        <button class="tab" type="button" data-view="history-panel">Histórico</button>
+        <button id="users-tab" class="tab" type="button" data-view="users-panel" hidden>Usuários</button>
+      </nav>
+
+      <section id="checklist-panel" class="content-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">FICHA DE INSPEÇÃO</p>
+            <h2>Empilhadeira</h2>
+          </div>
+          <span class="required-key"><span aria-hidden="true">*</span> Resposta obrigatória</span>
+        </div>
+        <div class="notice info">Faça a inspeção antes de iniciar a produção. Marque uma resposta para cada item. Se encontrar um problema, explique na observação e comunique o responsável antes de usar o equipamento.</div>
+        <div id="check-alert" class="notice error" role="alert" hidden></div>
+        <div id="check-success" class="notice success" role="status" hidden></div>
+        <nav class="check-tabs" aria-label="Seções do checklist">
+          <button class="check-tab active" type="button" data-check-tab="vehicle-section" aria-selected="true">Checklist da empilhadeira <span>25 itens</span></button>
+          <button class="check-tab" type="button" data-check-tab="safety-section" aria-selected="false">EPIs e condições <span>7 itens</span></button>
+        </nav>
+        <section id="report-share" class="report-share" aria-labelledby="share-title" hidden>
+          <div>
+            <p class="eyebrow">INSPEÇÃO REGISTRADA</p>
+            <h3 id="share-title">Baixe ou compartilhe o relatório</h3>
+            <p class="muted">O PDF inclui o operador, a data e o horário, as 32 respostas e as observações.</p>
+          </div>
+          <label for="whatsapp-number">WhatsApp do destinatário
+            <input id="whatsapp-number" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" maxlength="24">
+            <span class="muted">Informe o DDD e o número brasileiro ou o código do país.</span>
+          </label>
+          <div class="report-actions">
+            <button id="download-report" class="button outline" type="button">Baixar PDF</button>
+            <button id="send-whatsapp" class="button whatsapp-button" type="button">Abrir WhatsApp</button>
+          </div>
+          <p class="share-help">O WhatsApp não permite que o site anexe o arquivo automaticamente. O PDF será baixado; anexe-o à conversa antes de enviar.</p>
+        </section>
+        <form id="check-form" novalidate>
+          <section id="vehicle-section" class="check-tab-panel">
+            <p class="notice info">Verifique cada item da empilhadeira antes de iniciar. Se encontrar algum problema, registre como Não conforme e informe o responsável.</p>
+            <div id="questions" class="question-list"></div>
+          </section>
+          <section id="safety-section" class="check-tab-panel" hidden>
+            <p class="notice info">Confira cada EPI e as condições antes de iniciar a atividade. Responda com sinceridade; se algum item não estiver em condições, marque Não conforme e comunique o responsável.</p>
+            <div id="safety-questions" class="question-list"></div>
+          </section>
+          <div class="notes-block">
+            <label for="check-notes">Observações <span class="muted">(opcional)</span></label>
+            <textarea id="check-notes" name="notes" rows="4" maxlength="2000" placeholder="Descreva qualquer problema ou informação relevante."></textarea>
+          </div>
+          <div class="form-footer">
+            <p class="muted">O registro inclui automaticamente seu usuário e o horário do servidor.</p>
+            <button id="submit-check" class="button primary" type="submit">Registrar inspeção</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="history-panel" class="content-panel" hidden>
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">REGISTROS DE INSPEÇÃO</p>
+            <h2 id="history-title">Meu histórico</h2>
+          </div>
+          <button id="refresh-history" class="button outline" type="button">Atualizar</button>
+        </div>
+        <div id="history-filters" class="filters" hidden>
+          <label>Operador
+            <select id="operator-filter"><option value="">Todos os operadores</option></select>
+          </label>
+          <label>Data inicial
+            <input id="from-filter" type="date">
+          </label>
+          <label>Data final
+            <input id="to-filter" type="date">
+          </label>
+          <button id="apply-filters" class="button secondary" type="button">Apresentar histórico</button>
+          <button id="export-pdf" class="button outline" type="button">Exportar PDF</button>
+        </div>
+        <div id="history-alert" class="notice error" role="alert" hidden></div>
+        <div id="history-list" class="history-list"></div>
+      </section>
+
+      <section id="users-panel" class="content-panel" hidden>
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">ACESSO AO SISTEMA</p>
+            <h2>Usuários e perfis</h2>
+          </div>
+          <button id="refresh-users" class="button outline" type="button">Atualizar</button>
+        </div>
+        <div class="notice info">Gerencie os acessos e as senhas temporárias. O usuário deverá criar sua própria senha ao entrar. Excluir o acesso preserva os checklists registrados no histórico. Apenas lucas.santiago pode atribuir ou alterar os perfis de administrador e operador.</div>
+        <div id="users-alert" class="notice error" role="alert" hidden></div>
+        <form id="user-form" class="user-form">
+          <label>Nome completo
+            <input name="displayName" required minlength="2" maxlength="80" autocomplete="name">
+          </label>
+          <label>Usuário
+            <input name="username" required minlength="3" maxlength="30" autocomplete="off">
+          </label>
+          <label>Senha temporária
+            <input name="temporaryPassword" type="password" required minlength="8" maxlength="200" autocomplete="new-password">
+          </label>
+          <label id="new-user-role-field" hidden>Perfil
+            <select name="role">
+              <option value="operator">Operador</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </label>
+          <button class="button primary" type="submit">Criar usuário</button>
+        </form>
+        <div id="users-list" class="users-list"></div>
+      </section>
+
+      <footer class="page-footer">Preencha o checklist antes de cada uso da empilhadeira.</footer>
+    </section>
+  </main>
+</body>
+</html>
