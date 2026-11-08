@@ -24,7 +24,6 @@ O checklist fica acessível somente no computador em que o servidor está rodand
 - **Exclusão de históricos:** somente `lucas.santiago` pode excluir registros individuais pelo botão **Excluir histórico**. A exclusão é permanente e requer confirmação; os demais administradores podem consultar os históricos, mas não excluí-los.
 - Outros administradores podem cadastrar e gerenciar operadores, mas não podem criar administradores nem alterar o perfil de usuários.
 - O horário é capturado pelo servidor no momento em que o registro é recebido. Os registros são armazenados localmente e não são editáveis pela interface.
-- Senhas são armazenadas como hashes PBKDF2-SHA256 com salt individual. As sessões expiram após oito horas e o acesso é limitado à rede local configurada.
 - Senhas são armazenadas como hashes PBKDF2-SHA256 com salt individual. As sessões expiram após oito horas e o acesso é limitado ao próprio computador (`localhost`).
 
 ## Acesso local
@@ -33,7 +32,6 @@ O servidor escuta apenas em `localhost:8080`; não habilite encaminhamento de po
 
 ## Dados e resolução de problemas
 
-- A porta padrão é `8080`. Para outra porta, altere `server.ps1` e `configurar-rede.ps1` antes de configurar a rede.
 - A porta padrão é `8080`. Para outra porta, altere `server.ps1` e `configurar-rede.ps1` antes de executar a configuração local.
 - Se outro programa já estiver usando a porta, encerre-o ou escolha outra porta e repita a configuração.
 - Os arquivos de dados são criados automaticamente em `data`. Para manter os dados em outra pasta, defina `CHECKLIST_DATA_DIR` antes de iniciar `server.ps1`.
